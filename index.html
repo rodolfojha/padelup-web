@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark only">
+<title>PÁDEL UP — Nunca más te falta uno</title>
+<meta name="description" content="Todos los clubes de Colombia en un mapa, partidos con gente de tu nivel y ranking real. PÁDEL UP es gratis para jugadores.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#03090A; --bg2:#061314; --ink:#F2FFFE; --dim:#9CB8B5; --dim2:#6B8482;
+  --teal:#17E3D6; --teal-dk:#0B8F87; --amber:#FFB03A;
+  --maxw:1180px; --gut:clamp(20px,5vw,56px);
+  --ease:cubic-bezier(.2,.8,.24,1);
+}
+*{box-sizing:border-box}
+html{background:#03090A !important;scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+html body{
+  margin:0;background:#03090A !important;color:var(--ink);
+  font-family:Archivo,system-ui,-apple-system,sans-serif;font-size:17px;line-height:1.6;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+img{max-width:100%;display:block}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--teal);outline-offset:3px}
+::selection{background:var(--teal);color:#03090A}
+
+#scene{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;background:#03090A}
+#veil{position:fixed;inset:0;z-index:1;pointer-events:none;
+  background:radial-gradient(120% 70% at 50% 0%,transparent 0%,rgba(3,9,10,.3) 55%,rgba(3,9,10,.82) 100%)}
+.page{position:relative;z-index:2}
+
+h1,h2,h3{margin:0;font-weight:900;text-transform:uppercase;line-height:.88;letter-spacing:-.025em;text-wrap:balance}
+h1{font-size:clamp(52px,10vw,124px)}
+h2{font-size:clamp(36px,6.4vw,78px)}
+h3{font-size:clamp(20px,2.6vw,27px);line-height:1.1}
+p{margin:0}
+.kick{font-size:12px;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:var(--teal)}
+.lede{font-size:clamp(17px,2vw,22px);line-height:1.5;color:var(--dim);max-width:54ch}
+.sm{font-size:14.5px;line-height:1.6;color:var(--dim)}
+.xs{font-size:12.5px;line-height:1.55;color:var(--dim2)}
+.t{color:var(--teal)}.a{color:var(--amber)}
+
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 var(--gut)}
+.pad{padding:clamp(76px,11vw,148px) 0}
+.sep{height:1px;background:linear-gradient(90deg,transparent,rgba(23,227,214,.26),transparent);border:0;margin:0}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;
+  font-family:Archivo;font-size:14px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  padding:17px 32px;border-radius:999px;border:1px solid transparent;text-decoration:none;cursor:pointer;
+  transition:all .25s var(--ease)}
+.b1{background:var(--teal);color:#03090A}
+.b1:hover{background:#4BF0E5;transform:translateY(-2px);box-shadow:0 14px 40px rgba(23,227,214,.3)}
+.b2{border-color:rgba(242,255,254,.26);color:var(--ink)}
+.b2:hover{border-color:var(--teal);color:var(--teal);background:rgba(23,227,214,.07)}
+.b3{background:var(--amber);color:#1A1000}
+.b3:hover{background:#FFC262;transform:translateY(-2px)}
+.btn:disabled{opacity:.3;cursor:not-allowed;transform:none;box-shadow:none}
+
+/* header */
+header{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;
+  justify-content:space-between;gap:18px;padding:16px var(--gut);transition:all .4s var(--ease);
+  border-bottom:1px solid transparent}
+header.on{background:rgba(3,9,10,.84);backdrop-filter:blur(16px);border-bottom-color:rgba(23,227,214,.16);padding-top:11px;padding-bottom:11px}
+.mk{display:flex;align-items:center;gap:11px;text-decoration:none}
+.mk img{height:38px;width:auto;transition:height .4s var(--ease)}
+header.on .mk img{height:31px}
+.navl{display:flex;gap:28px;align-items:center}
+.navl a{text-decoration:none;font-size:13px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--dim);transition:color .2s}
+.navl a:hover{color:var(--teal)}
+
+/* hero */
+.hero{min-height:100svh;display:flex;align-items:center;padding:120px 0 80px}
+.hero h1 span{display:block}
+.hero h1 .no{color:var(--teal)}
+.hero .lede{margin-top:28px}
+.cta{display:flex;flex-wrap:wrap;gap:13px;margin-top:40px}
+.stats{display:flex;flex-wrap:wrap;gap:14px 46px;margin-top:58px;padding-top:28px;border-top:1px solid rgba(242,255,254,.12)}
+.stats div b{display:block;font-size:34px;font-weight:900;line-height:1;letter-spacing:-.03em}
+.stats div span{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim2);margin-top:7px;display:block}
+.scrollhint{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);font-size:11px;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--dim2);display:flex;flex-direction:column;align-items:center;gap:9px}
+.scrollhint i{width:1px;height:38px;background:linear-gradient(180deg,var(--teal),transparent);animation:dn 2.2s infinite}
+@keyframes dn{0%,100%{opacity:.2;transform:scaleY(.5)}50%{opacity:1;transform:scaleY(1)}}
+
+/* chat problema */
+.chatbox{margin-top:40px;display:flex;flex-direction:column;gap:13px;max-width:560px}
+.msg{align-self:flex-start;max-width:85%;background:rgba(242,255,254,.06);border:1px solid rgba(242,255,254,.1);
+  border-radius:18px 18px 18px 5px;padding:15px 20px;font-size:16px;line-height:1.35}
+.msg.me{align-self:flex-end;background:rgba(23,227,214,.1);border-color:rgba(23,227,214,.26);border-radius:18px 18px 5px 18px}
+.msg i{display:block;font-size:11px;font-style:normal;color:var(--dim2);font-weight:700;margin-top:6px}
+.silence{display:flex;align-items:center;gap:16px;margin:4px 0}
+.silence i{flex:1;height:1px;background:rgba(242,255,254,.13)}
+.silence span{font-size:13.5px;color:var(--dim2);font-style:italic;white-space:nowrap}
+
+/* pilares */
+.pil{display:grid;grid-template-columns:repeat(auto-fit,minmax(265px,1fr));gap:1px;background:rgba(242,255,254,.1);
+  border:1px solid rgba(242,255,254,.1);border-radius:6px;overflow:hidden;margin-top:44px}
+.pc{background:rgba(6,19,20,.72);backdrop-filter:blur(6px);padding:34px 30px 32px;display:flex;flex-direction:column;gap:12px;
+  min-height:250px;transition:background .3s var(--ease)}
+.pc:hover{background:rgba(10,32,32,.85)}
+.pc .n{font-size:12px;font-weight:700;letter-spacing:.2em;color:var(--teal-dk)}
+.pc p{font-size:14.5px;color:var(--dim)}
+.pc .tag{margin-top:auto;padding-top:16px;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--amber);font-weight:700}
+
+/* bandas */
+.band{position:relative;overflow:hidden;border-radius:8px;margin-top:44px;min-height:clamp(400px,50vw,540px);
+  display:flex;align-items:flex-end;border:1px solid rgba(23,227,214,.2);
+  background:radial-gradient(130% 110% at 78% 18%,rgba(13,48,47,.92) 0%,rgba(5,16,17,.96) 52%,rgba(3,9,10,.98) 100%)}
+.band .ct{position:relative;z-index:3;padding:clamp(28px,4vw,52px);width:100%;max-width:640px}
+.chips{display:flex;flex-wrap:wrap;gap:9px;margin-top:22px}
+
+/* mockup de mapa */
+.mapmock{position:absolute;inset:0;z-index:1;overflow:hidden}
+.mapmock svg{position:absolute;inset:0;width:100%;height:100%}
+.mapmock::after{content:"";position:absolute;inset:0;
+  background:linear-gradient(72deg,rgba(3,9,10,.97) 0%,rgba(3,9,10,.9) 34%,rgba(3,9,10,.3) 62%,transparent 84%)}
+.pin{position:absolute;width:13px;height:13px;border-radius:50%;background:var(--teal);
+  box-shadow:0 0 0 5px rgba(23,227,214,.16),0 0 20px rgba(23,227,214,.85);z-index:2}
+.pin::after{content:"";position:absolute;inset:-9px;border-radius:50%;border:1px solid rgba(23,227,214,.5);
+  animation:ping 3s cubic-bezier(.2,.7,.3,1) infinite}
+.pin.p2::after{animation-delay:.9s}.pin.p3::after{animation-delay:1.8s}
+.pin.amb{background:var(--amber);box-shadow:0 0 0 5px rgba(255,176,58,.16),0 0 20px rgba(255,176,58,.8)}
+.pin.amb::after{border-color:rgba(255,176,58,.5)}
+@keyframes ping{0%{transform:scale(.6);opacity:.9}70%{transform:scale(2.5);opacity:0}100%{opacity:0}}
+.popup{position:absolute;z-index:3;width:258px;background:rgba(5,18,19,.95);backdrop-filter:blur(10px);
+  border:1px solid rgba(23,227,214,.42);border-radius:14px;padding:18px 20px;box-shadow:0 20px 50px rgba(0,0,0,.65)}
+.popup .lb{font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--teal)}
+.popup .hr{font-size:30px;font-weight:900;line-height:1;margin-top:9px;letter-spacing:-.03em}
+.popup .dt{font-size:13px;color:var(--dim);margin-top:9px}
+.popup .pz{display:inline-block;margin-top:13px;font-size:11px;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:#03090A;background:var(--teal);padding:7px 14px;border-radius:999px}
+.chip{background:rgba(242,255,254,.08);border:1px solid rgba(242,255,254,.14);border-radius:999px;
+  padding:9px 18px;font-size:13px;font-weight:500;color:var(--dim)}
+
+/* tarjeta nivel */
+.lvl{display:inline-flex;flex-direction:column;background:linear-gradient(160deg,rgba(10,32,31,.95),rgba(3,9,9,.95));
+  border:2px solid var(--teal);border-radius:20px;padding:30px 34px;min-width:min(360px,100%);box-shadow:0 28px 70px rgba(0,0,0,.6)}
+.lvl .tp{display:flex;justify-content:space-between;align-items:flex-start;gap:34px}
+.lvl .lb{font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--teal)}
+.lvl .cat{font-size:80px;font-weight:900;line-height:.82;letter-spacing:-.045em;margin-top:5px}
+.lvl .rk{text-align:right}
+.lvl .rk b{display:block;font-size:34px;font-weight:900;color:var(--amber);line-height:1}
+.lvl .rk span{font-size:11px;color:var(--dim2);display:block;margin-top:5px;line-height:1.25}
+.lvl .bar{margin-top:24px;height:10px;border-radius:5px;background:rgba(242,255,254,.1);overflow:hidden}
+.lvl .bar i{display:block;height:100%;width:0;background:var(--teal);border-radius:5px;transition:width 1.4s var(--ease)}
+.lvl.in .bar i{width:72%}
+.lvl .go{font-size:14px;color:var(--dim);margin-top:14px}
+
+/* valoración física */
+.vf{background:linear-gradient(180deg,rgba(6,19,20,.9),rgba(3,9,10,.9));border:1px solid rgba(255,176,58,.26);
+  border-radius:8px;padding:clamp(30px,5vw,58px);margin-top:44px}
+.vfg{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:26px;margin-top:38px}
+.vfi{border-top:1px solid rgba(255,176,58,.3);padding-top:18px}
+.vfi b{display:block;font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--amber);margin-bottom:10px}
+.vfi p{font-size:14.5px;color:var(--dim)}
+.med{display:flex;align-items:flex-start;gap:13px;margin-top:32px;padding:18px 20px;
+  background:rgba(255,176,58,.07);border-left:2px solid var(--amber);border-radius:0 5px 5px 0}
+
+/* formularios */
+.ftab{display:flex;gap:9px;margin-top:40px;flex-wrap:wrap}
+.ftab button{font-family:Archivo;font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  background:transparent;border:1px solid rgba(242,255,254,.2);color:var(--dim);padding:14px 26px;border-radius:999px;
+  cursor:pointer;transition:all .22s var(--ease)}
+.ftab button:hover{border-color:var(--teal);color:var(--teal)}
+.ftab button[aria-selected="true"]{background:var(--teal);border-color:var(--teal);color:#03090A}
+.shell{margin-top:24px;background:rgba(6,19,20,.78);backdrop-filter:blur(8px);
+  border:1px solid rgba(242,255,254,.13);border-radius:8px;overflow:hidden}
+.bar2{display:flex;border-bottom:1px solid rgba(242,255,254,.13)}
+.bar2 div{flex:1;padding:13px 8px;text-align:center;font-size:10.5px;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--dim2);border-right:1px solid rgba(242,255,254,.09);transition:all .3s var(--ease)}
+.bar2 div:last-child{border-right:0}
+.bar2 div.now{background:var(--teal);color:#03090A}
+.bar2 div.ok{color:var(--teal)}
+.pan{padding:clamp(26px,4vw,42px)}
+.pan[hidden]{display:none}
+.q{font-size:clamp(21px,3vw,30px);font-weight:900;text-transform:uppercase;line-height:1;letter-spacing:-.02em;margin-bottom:9px}
+.qh{font-size:14px;color:var(--dim2);margin-bottom:26px}
+.opts{display:flex;flex-wrap:wrap;gap:9px}
+.opt{font-family:Archivo;font-size:14.5px;font-weight:500;color:var(--ink);text-align:left;
+  background:rgba(242,255,254,.05);border:1px solid rgba(242,255,254,.18);padding:15px 22px;border-radius:999px;
+  cursor:pointer;transition:all .2s var(--ease)}
+.opt:hover{border-color:var(--teal);background:rgba(23,227,214,.1)}
+.opt[aria-pressed="true"]{background:var(--teal);border-color:var(--teal);color:#03090A;font-weight:700}
+.flds{display:grid;gap:17px}
+label.fl{display:block;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--dim2);margin-bottom:8px}
+input[type=text],input[type=tel],input[type=email]{width:100%;font-family:Archivo;font-size:16px;color:var(--ink);
+  background:rgba(242,255,254,.05);border:1px solid rgba(242,255,254,.18);border-radius:5px;padding:14px 16px;
+  transition:all .2s var(--ease)}
+input:focus{outline:none;border-color:var(--teal);background:rgba(23,227,214,.07)}
+input::placeholder{color:rgba(242,255,254,.3)}
+.cns{display:flex;gap:12px;align-items:flex-start}
+.cns input{margin-top:4px;width:17px;height:17px;flex:0 0 17px;accent-color:var(--teal)}
+.cns label{font-size:13px;line-height:1.5;color:var(--dim)}
+.row{display:flex;justify-content:space-between;gap:14px;margin-top:28px;padding-top:22px;border-top:1px solid rgba(242,255,254,.13)}
+.gh{background:none;border:0;font-family:Archivo;font-size:13px;font-weight:700;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--dim2);cursor:pointer;padding:10px 2px}
+.gh:hover{color:var(--ink)}
+.res{background:rgba(23,227,214,.08);border:1px solid rgba(23,227,214,.3);border-radius:6px;padding:24px 26px;margin-bottom:22px}
+.res dl{display:grid;grid-template-columns:auto 1fr;gap:9px 20px;margin:13px 0 0}
+.res dt{font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--teal)}
+.res dd{margin:0;font-size:15px}
+.gain{margin-top:18px;font-size:15px;color:var(--ink);line-height:1.55}
+.gain b{color:var(--teal)}
+
+/* blog */
+.posts{margin-top:40px;border-top:1px solid rgba(242,255,254,.13)}
+.post{border-bottom:1px solid rgba(242,255,254,.13)}
+.post summary{list-style:none;cursor:pointer;padding:26px 0;display:grid;grid-template-columns:104px 1fr 26px;gap:20px;align-items:start}
+.post summary::-webkit-details-marker{display:none}
+.post .cat{font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--teal);padding-top:6px}
+.post .ti{font-size:clamp(19px,2.6vw,26px);font-weight:900;text-transform:uppercase;line-height:1.05;letter-spacing:-.02em;transition:color .2s}
+.post summary:hover .ti{color:var(--teal)}
+.post .ex{font-size:14px;color:var(--dim);margin-top:9px;max-width:62ch}
+.post .pl{justify-self:end;width:22px;height:22px;position:relative;margin-top:9px}
+.post .pl::before,.post .pl::after{content:"";position:absolute;background:var(--teal);transition:transform .3s var(--ease)}
+.post .pl::before{top:10px;left:0;right:0;height:1.5px}
+.post .pl::after{left:10px;top:0;bottom:0;width:1.5px}
+.post[open] .pl::after{transform:scaleY(0)}
+.post .bd{padding:0 0 32px;display:grid;grid-template-columns:104px 1fr;gap:20px}
+.post .bd .c{grid-column:2;max-width:66ch;display:flex;flex-direction:column;gap:14px}
+.post .bd p{font-size:16px;line-height:1.72;color:#D4E8E6}
+.post .bd strong{color:var(--ink)}
+
+/* footer */
+footer{background:var(--bg2);border-top:1px solid rgba(23,227,214,.18);padding:54px 0 40px;position:relative;z-index:2}
+.fg{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:34px}
+.fg h4{margin:0 0 15px;font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--teal)}
+.fg a{display:block;text-decoration:none;font-size:14.5px;color:var(--dim);padding:5px 0;transition:color .2s}
+.fg a:hover{color:var(--ink)}
+.fbot{margin-top:40px;padding-top:24px;border-top:1px solid rgba(242,255,254,.1);display:flex;
+  flex-wrap:wrap;gap:12px 26px;justify-content:space-between;align-items:center}
+
+.rv{opacity:0;transform:translateY(20px);transition:opacity .85s var(--ease),transform .85s var(--ease)}
+.rv.in{opacity:1;transform:none}
+
+@media (max-width:880px){
+  .navl{display:none}
+  .fg{grid-template-columns:1fr 1fr}
+  .post summary{grid-template-columns:1fr 24px}
+  .post .cat{grid-column:1;padding-top:0}
+  .post .pl{grid-row:1;grid-column:2}
+  .post .bd{grid-template-columns:1fr}
+  .post .bd .c{grid-column:1}
+  .bar2 div{font-size:9px;letter-spacing:.04em;padding:11px 3px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms !important;transition-duration:.01ms !important}
+  html{scroll-behavior:auto}
+  .rv{opacity:1;transform:none}
+  .lvl .bar i{width:72%}
+}
+</style>
+</head>
+<body>
+
+<canvas id="scene" aria-hidden="true"></canvas>
+<div id="veil" aria-hidden="true"></div>
+
+<header id="hdr">
+  <a class="mk" href="#top"><img src="img/logo.png" alt="PÁDEL UP"></a>
+  <nav class="navl" aria-label="Navegación">
+    <a href="#mapa">Mapa</a>
+    <a href="#nivel">Nivel</a>
+    <a href="#valoracion">Valoración física</a>
+    <a href="#unete">Únete</a>
+    <a href="#blog">Blog</a>
+  </nav>
+  <a class="btn b1" style="padding:12px 24px;font-size:12px" href="#unete">Entrar</a>
+</header>
+
+<div class="page" id="top">
+
+<!-- ========== HERO ========== -->
+<section class="hero">
+  <div class="wrap">
+    <p class="kick rv">Pádel en Colombia</p>
+    <h1 class="rv" style="margin-top:20px"><span>Faltaba</span><span>uno.</span><span class="no">Ya no.</span></h1>
+    <p class="lede rv" style="margin-top:28px">Todos los clubes del país en un mapa, partidos con gente de tu nivel y un ranking que se mueve de verdad. Gratis para jugadores.</p>
+    <div class="cta rv">
+      <a class="btn b1" href="#unete">Quiero jugar</a>
+      <a class="btn b2" href="#unete">Tengo un club</a>
+    </div>
+    <div class="stats rv">
+      <div><b>1</b><span>Mapa nacional</span></div>
+      <div><b>0 $</b><span>Para jugadores</span></div>
+      <div><b>4</b><span>Jugadores por partido</span></div>
+    </div>
+  </div>
+  <div class="scrollhint" aria-hidden="true"><i></i><span>Baja</span></div>
+</section>
+
+<!-- ========== PROBLEMA ========== -->
+<section class="pad">
+  <div class="wrap rv">
+    <p class="kick">Lo de siempre</p>
+    <h2 style="margin-top:18px">El grupo<br>del club</h2>
+    <div class="chatbox">
+      <div class="msg">¿Alguien para mañana 7 p.m.?<i>6:48 p.m.</i></div>
+      <div class="msg me">yo<i>6:51 p.m.</i></div>
+      <div class="msg">yo también<i>7:03 p.m.</i></div>
+      <div class="silence"><i></i><span>y nadie más</span><i></i></div>
+      <div class="msg">bueno, mañana entonces<i>11:27 p.m.</i></div>
+    </div>
+    <p class="lede" style="margin-top:38px">Tres personas listas y el partido se cae. No es falta de gente: es que <strong style="color:var(--ink)">nadie sabe quién está disponible</strong>. Eso es lo único que arregla PÁDEL UP.</p>
+  </div>
+</section>
+
+<hr class="sep">
+
+<!-- ========== PILARES ========== -->
+<section class="pad">
+  <div class="wrap rv">
+    <p class="kick">Qué hace la app</p>
+    <h2 style="margin-top:18px">Tres cosas,<br>bien hechas</h2>
+    <div class="pil">
+      <article class="pc">
+        <span class="n">01</span>
+        <h3>El mapa</h3>
+        <p>Todos los clubes de Colombia, con horarios reales, tarifas y cuántas canchas hay libres. Sin llamar, sin preguntar en el grupo.</p>
+        <span class="tag">Gratis para todo club</span>
+      </article>
+      <article class="pc">
+        <span class="n">02</span>
+        <h3>El partido</h3>
+        <p>Abres un cupo, la app avisa a jugadores de tu nivel en tu zona y se llena. Cuando son cuatro, se reserva la cancha.</p>
+        <span class="tag">Se llena solo</span>
+      </article>
+      <article class="pc">
+        <span class="n">03</span>
+        <h3>Tu nivel</h3>
+        <p>Cada partido mueve tu categoría. No es un número que te pones tú: lo mueven los resultados, como en la liga.</p>
+        <span class="tag">Ranking real</span>
+      </article>
+      <article class="pc">
+        <span class="n">04</span>
+        <h3>El cuerpo</h3>
+        <p>Valoración física con profesionales del deporte aliados. Porque el que se lesiona deja de jugar, y el que deja de jugar no vuelve.</p>
+        <span class="tag">Nuevo</span>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ========== MAPA ========== -->
+<section class="pad" id="mapa">
+  <div class="wrap rv">
+    <p class="kick">Todos los clubes</p>
+    <h2 style="margin-top:18px">En un<br>solo mapa</h2>
+    <div class="band">
+      <div class="mapmock" aria-hidden="true">
+        <svg viewBox="0 0 1200 560" preserveAspectRatio="xMidYMid slice">
+          <defs>
+            <linearGradient id="wg" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#0D3B3A"/><stop offset="100%" stop-color="#061616"/>
+            </linearGradient>
+          </defs>
+          <rect width="1200" height="560" fill="url(#wg)" opacity=".5"/>
+          <g stroke="#17E3D6" stroke-opacity=".13" fill="none" stroke-width="1.2">
+            <path d="M-20 120 H1220 M-20 268 H1220 M-20 410 H1220"/>
+            <path d="M160 -20 V580 M430 -20 V580 M700 -20 V580 M960 -20 V580"/>
+            <path d="M-20 60 L420 500 M520 -20 L1100 560 M820 -20 L1220 380"/>
+          </g>
+          <g stroke="#17E3D6" stroke-opacity=".3" fill="none" stroke-width="2.4">
+            <path d="M-20 268 H1220"/><path d="M700 -20 V580"/>
+          </g>
+          <g fill="#17E3D6" fill-opacity=".05">
+            <rect x="200" y="150" width="190" height="96" rx="6"/>
+            <rect x="470" y="300" width="190" height="86" rx="6"/>
+            <rect x="760" y="140" width="160" height="110" rx="6"/>
+            <rect x="1000" y="330" width="170" height="92" rx="6"/>
+          </g>
+          <g stroke="#0F8A84" stroke-opacity=".5" fill="none" stroke-width="7" stroke-linecap="round">
+            <path d="M300 200 L560 200 L560 345"/>
+          </g>
+        </svg>
+        <span class="pin" style="left:49%;top:36%"></span>
+        <span class="pin p2" style="left:68%;top:22%"></span>
+        <span class="pin p3 amb" style="left:79%;top:62%"></span>
+        <span class="pin p2" style="left:62%;top:78%"></span>
+        <span class="pin p3" style="left:88%;top:38%"></span>
+      </div>
+      <div class="popup" style="right:7%;top:17%">
+        <div class="lb">Cancha libre</div>
+        <div class="hr">7:00 p.m.</div>
+        <div class="dt">Club Bocagrande · 4 canchas<br>a 8 min de ti · $70.000 / hora</div>
+        <span class="pz">Reservar</span>
+      </div>
+      <div class="ct">
+        <h3>Dónde hay cancha libre, a qué hora y cuánto cuesta</h3>
+        <p class="sm" style="margin-top:14px;max-width:52ch">Estar en el mapa no cuesta nada y nunca va a costar. Un club que no aparece es un hueco en el producto, y los huecos los paga el jugador.</p>
+        <div class="chips">
+          <span class="chip">Horarios reales</span>
+          <span class="chip">Tarifas visibles</span>
+          <span class="chip">Chat directo con el club</span>
+          <span class="chip">Reserva sin llamar</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== NIVEL ========== -->
+<section class="pad" id="nivel">
+  <div class="wrap rv">
+    <p class="kick">Ranking real</p>
+    <h2 style="margin-top:18px">Tu nivel,<br>en serio</h2>
+    <div class="band" style="align-items:center">
+      <div class="ct" style="max-width:none;display:grid;grid-template-columns:auto 1fr;gap:clamp(26px,5vw,60px);align-items:center">
+        <div class="lvl" id="lvlcard">
+          <div class="tp">
+            <div><div class="lb">Categoría</div><div class="cat">5ta</div></div>
+            <div class="rk"><b>#47</b><span>Ranking<br>Cartagena</span></div>
+          </div>
+          <div class="bar"><i></i></div>
+          <div class="go">Te faltan 3 victorias para subir a 4ta</div>
+        </div>
+        <div>
+          <p class="lede">Cada partido cuenta. Nadie juega contra alguien que le pasa por encima, y nadie se aburre jugando contra quien no le llega.</p>
+          <div class="chips" style="margin-top:24px">
+            <span class="chip">Sube con resultados</span>
+            <span class="chip">Ranking por ciudad</span>
+            <span class="chip">Emparejamiento automático</span>
+            <span class="chip">Historial de partidos</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="sep">
+
+<!-- ========== VALORACIÓN FÍSICA ========== -->
+<section class="pad" id="valoracion">
+  <div class="wrap rv">
+    <p class="kick" style="color:var(--amber)">Nuevo · Red de aliados</p>
+    <h2 style="margin-top:18px">Valoración<br>física deportiva</h2>
+    <p class="lede" style="margin-top:24px">El pádel rompe hombros, codos y rodillas. Casi siempre por lo mismo: mala técnica sobre un cuerpo sin preparar. Agenda una valoración con un profesional del deporte aliado, desde la app.</p>
+
+    <div class="vf">
+      <h3>Qué incluye</h3>
+      <div class="vfg">
+        <div class="vfi"><b>01 · Movilidad</b><p>Hombro, cadera y tobillo. Las tres zonas donde el pádel cobra primero.</p></div>
+        <div class="vfi"><b>02 · Fuerza y estabilidad</b><p>Pruebas básicas para ver qué te sostiene y qué te está compensando.</p></div>
+        <div class="vfi"><b>03 · Historial de molestias</b><p>Lo que te duele después de jugar y llevas meses ignorando.</p></div>
+        <div class="vfi"><b>04 · Plan de prevención</b><p>Rutina corta y concreta para antes y después de la cancha.</p></div>
+      </div>
+      <div class="med">
+        <div>
+          <p class="sm" style="color:var(--ink)"><strong>Esto no es un diagnóstico médico.</strong></p>
+          <p class="xs" style="margin-top:7px">La valoración la realizan profesionales del deporte y de la salud aliados, con su propia tarjeta profesional, en su propio consultorio. PÁDEL UP conecta y agenda; no presta el servicio clínico ni emite diagnósticos. Si ya tienes una lesión, consulta primero a tu médico tratante.</p>
+        </div>
+      </div>
+      <div class="cta" style="margin-top:30px">
+        <a class="btn b3" href="#unete">Agendar mi valoración</a>
+        <a class="btn b2" href="#unete">Soy fisio o médico deportivo</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="sep">
+
+<!-- ========== FORMULARIOS ========== -->
+<section class="pad" id="unete">
+  <div class="wrap rv">
+    <p class="kick">Únete</p>
+    <h2 style="margin-top:18px">Entra en<br>un minuto</h2>
+    <p class="lede" style="margin-top:24px">Contesta cuatro cosas y te armamos el mensaje de WhatsApp listo para enviar. Nada se envía desde esta página.</p>
+
+    <div class="ftab" role="tablist" aria-label="Tipo de registro">
+      <button type="button" role="tab" id="tab-j" aria-selected="true" aria-controls="form-j">Soy jugador</button>
+      <button type="button" role="tab" id="tab-c" aria-selected="false" aria-controls="form-c">Tengo un club</button>
+    </div>
+
+    <!-- ===== JUGADOR ===== -->
+    <div class="shell" id="form-j" role="tabpanel" aria-labelledby="tab-j">
+      <div class="bar2" aria-hidden="true">
+        <div class="now" data-s="j1">1 · Ciudad</div>
+        <div data-s="j2">2 · Nivel</div>
+        <div data-s="j3">3 · Horario</div>
+        <div data-s="j4">4 · Contacto</div>
+      </div>
+
+      <div class="pan" data-p="j1">
+        <p class="q">¿En qué ciudad juegas?</p>
+        <p class="qh">Para avisarte cuando haya partidos cerca.</p>
+        <div class="opts" data-g="jciudad">
+          <button type="button" class="opt" data-v="Cartagena" aria-pressed="false">Cartagena</button>
+          <button type="button" class="opt" data-v="Barranquilla" aria-pressed="false">Barranquilla</button>
+          <button type="button" class="opt" data-v="Bogotá" aria-pressed="false">Bogotá</button>
+          <button type="button" class="opt" data-v="Medellín" aria-pressed="false">Medellín</button>
+          <button type="button" class="opt" data-v="Cali" aria-pressed="false">Cali</button>
+          <button type="button" class="opt" data-v="Otra ciudad" aria-pressed="false">Otra</button>
+        </div>
+        <div class="row"><span></span><button type="button" class="btn b1" data-next="j1" disabled>Siguiente</button></div>
+      </div>
+
+      <div class="pan" data-p="j2" hidden>
+        <p class="q">¿Cómo juegas hoy?</p>
+        <p class="qh">Sé honesto: de esto depende con quién te emparejamos.</p>
+        <div class="opts" data-g="jnivel">
+          <button type="button" class="opt" data-v="Nunca he jugado" aria-pressed="false">Nunca he jugado</button>
+          <button type="button" class="opt" data-v="Principiante (7ma / 6ta)" aria-pressed="false">Principiante · 7ma / 6ta</button>
+          <button type="button" class="opt" data-v="Intermedio (5ta / 4ta)" aria-pressed="false">Intermedio · 5ta / 4ta</button>
+          <button type="button" class="opt" data-v="Avanzado (3ra o más)" aria-pressed="false">Avanzado · 3ra o más</button>
+        </div>
+        <div class="row"><button type="button" class="gh" data-back="j1">Atrás</button><button type="button" class="btn b1" data-next="j2" disabled>Siguiente</button></div>
+      </div>
+
+      <div class="pan" data-p="j3" hidden>
+        <p class="q">¿Cuándo puedes jugar?</p>
+        <p class="qh">Puedes cambiarlo después dentro de la app.</p>
+        <div class="opts" data-g="jhora">
+          <button type="button" class="opt" data-v="Mañanas, antes del trabajo" aria-pressed="false">Mañanas</button>
+          <button type="button" class="opt" data-v="Mediodía" aria-pressed="false">Mediodía</button>
+          <button type="button" class="opt" data-v="Noches, después del trabajo" aria-pressed="false">Noches</button>
+          <button type="button" class="opt" data-v="Fines de semana" aria-pressed="false">Fines de semana</button>
+        </div>
+        <div class="row"><button type="button" class="gh" data-back="j2">Atrás</button><button type="button" class="btn b1" data-next="j3" disabled>Siguiente</button></div>
+      </div>
+
+      <div class="pan" data-p="j4" hidden>
+        <p class="q">¿A quién le escribimos?</p>
+        <p class="qh">Solo nombre y WhatsApp. Nada más.</p>
+        <div class="flds">
+          <div><label class="fl" for="jn">Nombre</label><input type="text" id="jn" placeholder="Tu nombre" autocomplete="given-name"></div>
+          <div><label class="fl" for="jt">WhatsApp</label><input type="tel" id="jt" placeholder="300 000 0000" inputmode="tel" autocomplete="tel"></div>
+          <div class="cns"><input type="checkbox" id="jok"><label for="jok">Autorizo a PÁDEL UP a usar estos datos para contactarme y avisarme de partidos. Puedo pedir que los eliminen cuando quiera.</label></div>
+        </div>
+        <div class="row"><button type="button" class="gh" data-back="j3">Atrás</button><button type="button" class="btn b1" id="jgo" disabled>Ver mi resumen</button></div>
+      </div>
+
+      <div class="pan" data-p="j5" hidden>
+        <p class="q">Listo, <span id="jrn">—</span></p>
+        <p class="qh">Este es el mensaje que se abre en WhatsApp. Puedes editarlo antes de enviarlo.</p>
+        <div class="res">
+          <p class="xs" style="color:var(--teal);letter-spacing:.14em;text-transform:uppercase;font-weight:700">Tu perfil de jugador</p>
+          <dl>
+            <dt>Ciudad</dt><dd id="jrc">—</dd>
+            <dt>Nivel</dt><dd id="jrl">—</dd>
+            <dt>Horario</dt><dd id="jrh">—</dd>
+          </dl>
+        </div>
+        <p class="gain" id="jgain">—</p>
+        <div class="cta" style="margin-top:26px">
+          <a class="btn b1" id="jwa" href="#" target="_blank" rel="noopener">Enviar por WhatsApp</a>
+          <button type="button" class="btn b2" data-reset="j">Empezar de nuevo</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== CLUB ===== -->
+    <div class="shell" id="form-c" role="tabpanel" aria-labelledby="tab-c" hidden>
+      <div class="bar2" aria-hidden="true">
+        <div class="now" data-s="c1">1 · Canchas</div>
+        <div data-s="c2">2 · Ocupación</div>
+        <div data-s="c3">3 · Prioridad</div>
+        <div data-s="c4">4 · Contacto</div>
+      </div>
+
+      <div class="pan" data-p="c1">
+        <p class="q">¿Cuántas canchas tienes?</p>
+        <p class="qh">Es lo primero que define cómo entras al mapa.</p>
+        <div class="opts" data-g="ccanchas">
+          <button type="button" class="opt" data-v="1 o 2 canchas" aria-pressed="false">1 – 2</button>
+          <button type="button" class="opt" data-v="3 o 4 canchas" aria-pressed="false">3 – 4</button>
+          <button type="button" class="opt" data-v="5 a 8 canchas" aria-pressed="false">5 – 8</button>
+          <button type="button" class="opt" data-v="Más de 8 canchas" aria-pressed="false">Más de 8</button>
+          <button type="button" class="opt" data-v="En construcción" aria-pressed="false">En construcción</button>
+        </div>
+        <div class="row"><span></span><button type="button" class="btn b1" data-next="c1" disabled>Siguiente</button></div>
+      </div>
+
+      <div class="pan" data-p="c2" hidden>
+        <p class="q">¿Cómo tienes la ocupación?</p>
+        <p class="qh">Sin maquillar. Es la única forma de que el plan te sirva.</p>
+        <div class="opts" data-g="cocup">
+          <button type="button" class="opt" data-v="Lleno en pico, vacío el resto del día" aria-pressed="false">Lleno en pico, vacío el resto</button>
+          <button type="button" class="opt" data-v="Media, con huecos todos los días" aria-pressed="false">Media, con huecos diarios</button>
+          <button type="button" class="opt" data-v="Baja, necesito jugadores nuevos" aria-pressed="false">Baja, necesito jugadores</button>
+          <button type="button" class="opt" data-v="Lleno casi siempre" aria-pressed="false">Lleno casi siempre</button>
+        </div>
+        <div class="row"><button type="button" class="gh" data-back="c1">Atrás</button><button type="button" class="btn b1" data-next="c2" disabled>Siguiente</button></div>
+      </div>
+
+      <div class="pan" data-p="c3" hidden>
+        <p class="q">¿Qué te urge resolver?</p>
+        <p class="qh">Escoge lo que más te pese este mes.</p>
+        <div class="opts" data-g="cprio">
+          <button type="button" class="opt" data-v="Llenar las horas valle" aria-pressed="false">Llenar horas valle</button>
+          <button type="button" class="opt" data-v="Dejar de reservar por WhatsApp" aria-pressed="false">Dejar de reservar por WhatsApp</button>
+          <button type="button" class="opt" data-v="Traer jugadores nuevos a la sede" aria-pressed="false">Traer jugadores nuevos</button>
+          <button type="button" class="opt" data-v="Organizar torneos internos" aria-pressed="false">Organizar torneos</button>
+          <button type="button" class="opt" data-v="Saber qué pasa con mis canchas (datos)" aria-pressed="false">Ver datos de mis canchas</button>
+        </div>
+        <div class="row"><button type="button" class="gh" data-back="c2">Atrás</button><button type="button" class="btn b1" data-next="c3" disabled>Siguiente</button></div>
+      </div>
+
+      <div class="pan" data-p="c4" hidden>
+        <p class="q">Datos del club</p>
+        <p class="qh">Con esto te llamamos y te montamos en el mapa.</p>
+        <div class="flds">
+          <div><label class="fl" for="cc">Nombre del club</label><input type="text" id="cc" placeholder="Nombre del club"></div>
+          <div><label class="fl" for="cn">Tu nombre</label><input type="text" id="cn" placeholder="Quién nos contesta" autocomplete="given-name"></div>
+          <div><label class="fl" for="ct">WhatsApp</label><input type="tel" id="ct" placeholder="300 000 0000" inputmode="tel" autocomplete="tel"></div>
+          <div class="cns"><input type="checkbox" id="cok"><label for="cok">Autorizo a PÁDEL UP a usar estos datos para contactarme sobre el registro de mi club.</label></div>
+        </div>
+        <div class="row"><button type="button" class="gh" data-back="c3">Atrás</button><button type="button" class="btn b1" id="cgo" disabled>Ver mi resumen</button></div>
+      </div>
+
+      <div class="pan" data-p="c5" hidden>
+        <p class="q">Listo, <span id="crn">—</span></p>
+        <p class="qh">Este es el mensaje que se abre en WhatsApp. Puedes editarlo antes de enviarlo.</p>
+        <div class="res">
+          <p class="xs" style="color:var(--teal);letter-spacing:.14em;text-transform:uppercase;font-weight:700">Tu club</p>
+          <dl>
+            <dt>Club</dt><dd id="crc">—</dd>
+            <dt>Canchas</dt><dd id="crk">—</dd>
+            <dt>Ocupación</dt><dd id="cro">—</dd>
+            <dt>Prioridad</dt><dd id="crp">—</dd>
+          </dl>
+        </div>
+        <p class="gain" id="cgain">—</p>
+        <div class="cta" style="margin-top:26px">
+          <a class="btn b1" id="cwa" href="#" target="_blank" rel="noopener">Enviar por WhatsApp</a>
+          <button type="button" class="btn b2" data-reset="c">Empezar de nuevo</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="sep">
+
+<!-- ========== BLOG ========== -->
+<section class="pad" id="blog">
+  <div class="wrap rv">
+    <p class="kick">Blog</p>
+    <h2 style="margin-top:18px">Pádel,<br>sin cuento</h2>
+    <p class="lede" style="margin-top:24px">Lo que de verdad te hace jugar mejor y lo que solo te hace gastar plata.</p>
+
+    <div class="posts">
+      <details class="post">
+        <summary>
+          <span class="cat">Nivel</span>
+          <span>
+            <span class="ti">Por qué tu categoría no es la que crees</span>
+            <span class="ex">Casi todo el mundo se pone media categoría por encima. El resultado es partidos desparejos y gente que no vuelve.</span>
+          </span>
+          <span class="pl" aria-hidden="true"></span>
+        </summary>
+        <div class="bd"><div class="c">
+          <p>Cuando alguien se autodefine el nivel, pasa una de dos cosas. O se pone por encima, llega a un partido donde no le llega la pelota y se va humillado. O se pone por debajo, barre a todo el mundo y nadie quiere volver a jugar con él.</p>
+          <p>Las dos son el mismo problema: <strong>el nivel declarado no sirve.</strong> Lo único que sirve es el resultado de los partidos jugados.</p>
+          <p>Por eso en PÁDEL UP la categoría se mueve sola. Ganas contra alguien de tu nivel y subes poco. Ganas contra alguien por encima y subes más. Pierdes contra alguien muy por debajo y bajas. Es la misma lógica de cualquier liga, aplicada a partidos informales.</p>
+          <p>El efecto secundario es el que importa: cuando el emparejamiento es parejo, la gente vuelve. Un partido 6-0 6-0 es un jugador perdido de los dos lados.</p>
+        </div></div>
+      </details>
+
+      <details class="post">
+        <summary>
+          <span class="cat">Cuerpo</span>
+          <span>
+            <span class="ti">El hombro: la lesión que nadie ve venir</span>
+            <span class="ex">No llega de golpe. Llega después de meses de remates con el brazo y cero trabajo de hombro.</span>
+          </span>
+          <span class="pl" aria-hidden="true"></span>
+        </summary>
+        <div class="bd"><div class="c">
+          <p>El pádel tiene un gesto por encima de la cabeza que se repite cientos de veces por partido: el remate. Si la fuerza sale del hombro y no de las piernas y el tronco, el hombro paga la cuenta.</p>
+          <p>La señal temprana casi nunca es dolor en la cancha. Es <strong>molestia al día siguiente levantando el brazo</strong>, o al dormir de ese lado. Ahí es cuando conviene parar y revisar, no cuando ya no puedes sacar.</p>
+          <p>Lo que más cambia el panorama es poco glamoroso: movilidad de hombro antes de jugar, trabajo de rotadores dos veces por semana, y aprender a rematar con el cuerpo. Nada de eso vende raquetas, pero es lo que te mantiene jugando a los cincuenta.</p>
+          <p>Si llevas meses con molestia, una valoración física te sale más barata que seis meses sin jugar.</p>
+        </div></div>
+      </details>
+
+      <details class="post">
+        <summary>
+          <span class="cat">Clubes</span>
+          <span>
+            <span class="ti">Las horas valle son el negocio, no el problema</span>
+            <span class="ex">Un club se mide por lo que pasa a las 10 a.m. de un martes, no por lo que pasa el jueves a las 7 p.m.</span>
+          </span>
+          <span class="pl" aria-hidden="true"></span>
+        </summary>
+        <div class="bd"><div class="c">
+          <p>Casi todos los clubes de pádel en Colombia están llenos entre 6 y 9 de la noche y vacíos el resto del día. Esa cancha vacía a las 11 a.m. cuesta exactamente lo mismo que la cancha llena a las 7 p.m.: arriendo, luz, mantenimiento.</p>
+          <p>El dueño promedio intenta arreglarlo bajando el precio en hora valle. Funciona a medias, porque <strong>el problema no es el precio: es que nadie sabe que esa cancha está libre.</strong></p>
+          <p>El jugador que podría ir a las 11 a.m. —el que trabaja por su cuenta, el que entra turno en la tarde, el retirado— no está en el grupo de WhatsApp del club. Está buscando dónde jugar, y no encuentra.</p>
+          <p>Eso es lo que hace un mapa con horarios reales: no baja el precio, aumenta la cantidad de gente que ve el hueco.</p>
+        </div></div>
+      </details>
+
+      <details class="post">
+        <summary>
+          <span class="cat">Equipo</span>
+          <span>
+            <span class="ti">Tu primera pala no debe ser la que usa el profesional</span>
+            <span class="ex">La pala de los videos es rígida, pesada y en forma de diamante. Es justo la peor opción para empezar.</span>
+          </span>
+          <span class="pl" aria-hidden="true"></span>
+        </summary>
+        <div class="bd"><div class="c">
+          <p>La pala del jugador profesional está diseñada para alguien que pega miles de bolas por semana con técnica depurada. En manos de alguien que empieza hace tres cosas: no perdona el golpe descentrado, carga el codo y el hombro, y no da potencia.</p>
+          <p>Para empezar conviene lo contrario: <strong>forma redonda, peso bajo, goma blanda</strong>. Perdona errores, da control y salida de bola, y protege la articulación.</p>
+          <p>El dato incómodo: la pala no es lo que te está frenando. Si llevas seis meses jugando y quieres mejorar, una clase cuesta menos que una pala y rinde diez veces más.</p>
+        </div></div>
+      </details>
+    </div>
+    <p class="xs" style="margin-top:22px">Contenido informativo. Para temas de salud o lesiones, consulta a un profesional.</p>
+  </div>
+</section>
+
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="fg">
+      <div>
+        <img src="img/logo.png" alt="PÁDEL UP" style="height:46px;width:auto">
+        <p class="sm" style="margin-top:18px;max-width:34ch">Todos los clubes de Colombia en un mapa. Partidos con gente de tu nivel. Gratis para jugadores.</p>
+      </div>
+      <div>
+        <h4>Producto</h4>
+        <a href="#mapa">El mapa</a>
+        <a href="#nivel">Ranking y nivel</a>
+        <a href="#valoracion">Valoración física</a>
+        <a href="#blog">Blog</a>
+      </div>
+      <div>
+        <h4>Contacto</h4>
+        <a href="#unete">Registrar mi club</a>
+        <a href="#unete">Entrar como jugador</a>
+        <a href="#unete">Soy fisio o médico deportivo</a>
+      </div>
+    </div>
+    <div class="fbot">
+      <span class="xs">© 2026 PÁDEL UP · Colombia</span>
+      <span class="xs">Tratamiento de datos conforme a la Ley 1581 de 2012 · [Enlace a la política]</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+"use strict";
+var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* ---------- header + reveal ---------- */
+var hdr = document.getElementById("hdr");
+addEventListener("scroll", function(){ hdr.classList.toggle("on", scrollY > 40); }, {passive:true});
+
+var io = new IntersectionObserver(function(es){
+  es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add("in"); io.unobserve(e.target); } });
+}, {threshold:.1});
+document.querySelectorAll(".rv").forEach(function(e){ io.observe(e); });
+var lc = document.getElementById("lvlcard");
+new IntersectionObserver(function(es){
+  es.forEach(function(e){ if(e.isIntersecting) e.target.classList.add("in"); });
+}, {threshold:.4}).observe(lc);
+
+/* ---------- tabs ---------- */
+var tj = document.getElementById("tab-j"), tc = document.getElementById("tab-c");
+function tab(which){
+  var j = which === "j";
+  tj.setAttribute("aria-selected", j); tc.setAttribute("aria-selected", !j);
+  document.getElementById("form-j").hidden = !j;
+  document.getElementById("form-c").hidden = j;
+}
+tj.addEventListener("click", function(){ tab("j"); });
+tc.addEventListener("click", function(){ tab("c"); });
+
+/* ---------- motor de pasos ---------- */
+var S = {j:{}, c:{}};
+function step(pre, n){
+  for(var i=1;i<=5;i++){
+    var p = document.querySelector('[data-p="'+pre+i+'"]');
+    if(p) p.hidden = (i !== n);
+    var b = document.querySelector('[data-s="'+pre+i+'"]');
+    if(b) b.className = (i === n ? "now" : (i < n ? "ok" : ""));
+  }
+  var sh = document.getElementById("form-"+pre);
+  if(n > 1 && sh) sh.scrollIntoView({behavior: reduce ? "auto" : "smooth", block:"center"});
+}
+document.querySelectorAll("[data-g]").forEach(function(g){
+  g.addEventListener("click", function(ev){
+    var b = ev.target.closest(".opt"); if(!b) return;
+    g.querySelectorAll(".opt").forEach(function(o){ o.setAttribute("aria-pressed","false"); });
+    b.setAttribute("aria-pressed","true");
+    var key = g.dataset.g, pre = key.charAt(0);
+    S[pre][key] = b.dataset.v;
+    var nb = g.closest(".pan").querySelector("[data-next]");
+    if(nb) nb.disabled = false;
+  });
+});
+document.querySelectorAll("[data-next]").forEach(function(b){
+  b.addEventListener("click", function(){
+    var id = b.dataset.next;
+    step(id.charAt(0), parseInt(id.slice(1), 10) + 1);
+  });
+});
+document.querySelectorAll("[data-back]").forEach(function(b){
+  b.addEventListener("click", function(){
+    var id = b.dataset.back;
+    step(id.charAt(0), parseInt(id.slice(1), 10));
+  });
+});
+
+function gate(ids, chk, btn){
+  function v(){
+    var ok = ids.every(function(i){
+      var el = document.getElementById(i);
+      return el.type === "tel" ? el.value.replace(/\D/g,"").length >= 10 : el.value.trim().length > 1;
+    });
+    btn.disabled = !(ok && document.getElementById(chk).checked);
+  }
+  ids.forEach(function(i){ document.getElementById(i).addEventListener("input", v); });
+  document.getElementById(chk).addEventListener("change", v);
+}
+var jgo = document.getElementById("jgo"), cgo = document.getElementById("cgo");
+gate(["jn","jt"], "jok", jgo);
+gate(["cc","cn","ct"], "cok", cgo);
+
+/* ── CAMBIAR POR EL WHATSAPP DE PÁDEL UP ──
+   Formato: código de país + número, sin + ni espacios. Ej: 573001234567 */
+var WA = "573000000000";
+function wa(msg){ return "https://wa.me/" + WA + "?text=" + encodeURIComponent(msg); }
+
+/* --- jugador --- */
+var JGAIN = {
+  "Nunca he jugado":"Te metemos en partidos de iniciación, con gente que también está empezando. Nadie te va a barrer el primer día.",
+  "Principiante (7ma / 6ta)":"Vas a jugar contra gente de tu nivel y a subir rápido. Es la etapa donde más se nota la mejora.",
+  "Intermedio (5ta / 4ta)":"Es el nivel con más jugadores en Colombia, así que es donde más partidos vas a encontrar.",
+  "Avanzado (3ra o más)":"Te conectamos con jugadores de categoría alta de tu ciudad y con los torneos que se armen."
+};
+jgo.addEventListener("click", function(){
+  var n = document.getElementById("jn").value.trim(),
+      t = document.getElementById("jt").value.replace(/\D/g,"");
+  document.getElementById("jrn").textContent = n;
+  document.getElementById("jrc").textContent = S.j.jciudad;
+  document.getElementById("jrl").textContent = S.j.jnivel;
+  document.getElementById("jrh").textContent = S.j.jhora;
+  document.getElementById("jgain").textContent = JGAIN[S.j.jnivel] || "";
+  document.getElementById("jwa").href = wa(
+    "Hola PÁDEL UP, soy " + n + " y quiero entrar como jugador.\n\n"
+    + "• Ciudad: " + S.j.jciudad + "\n"
+    + "• Nivel: " + S.j.jnivel + "\n"
+    + "• Horario: " + S.j.jhora + "\n\n"
+    + "Mi WhatsApp es " + t + "."
+  );
+  step("j", 5);
+});
+
+/* --- club --- */
+var CGAIN = {
+  "Llenar las horas valle":"La cancha vacía del martes a las 10 a.m. cuesta lo mismo que la llena del jueves a las 7 p.m. El mapa pone ese hueco frente a jugadores que hoy no saben que existe.",
+  "Dejar de reservar por WhatsApp":"Las reservas entran por la app con horario y tarifa visibles. Se acaba el ida y vuelta de mensajes para confirmar una cancha.",
+  "Traer jugadores nuevos a la sede":"Los jugadores que buscan dónde jugar en tu zona te ven en el mapa, con tus horarios y tus precios. No tienes que salir a buscarlos.",
+  "Organizar torneos internos":"Montas el torneo, la app arma los cuadros por categoría y avisa a los jugadores del nivel que necesitas.",
+  "Saber qué pasa con mis canchas (datos)":"Ves ocupación por hora y por día, qué horarios se te caen y de dónde vienen tus jugadores. Decides con datos, no con intuición."
+};
+cgo.addEventListener("click", function(){
+  var club = document.getElementById("cc").value.trim(),
+      n = document.getElementById("cn").value.trim(),
+      t = document.getElementById("ct").value.replace(/\D/g,"");
+  document.getElementById("crn").textContent = n;
+  document.getElementById("crc").textContent = club;
+  document.getElementById("crk").textContent = S.c.ccanchas;
+  document.getElementById("cro").textContent = S.c.cocup;
+  document.getElementById("crp").textContent = S.c.cprio;
+  document.getElementById("cgain").textContent = CGAIN[S.c.cprio] || "";
+  document.getElementById("cwa").href = wa(
+    "Hola PÁDEL UP, soy " + n + " de " + club + " y quiero registrar mi club en el mapa.\n\n"
+    + "• Canchas: " + S.c.ccanchas + "\n"
+    + "• Ocupación: " + S.c.cocup + "\n"
+    + "• Prioridad: " + S.c.cprio + "\n\n"
+    + "Mi WhatsApp es " + t + "."
+  );
+  step("c", 5);
+});
+
+document.querySelectorAll("[data-reset]").forEach(function(b){
+  b.addEventListener("click", function(){
+    var pre = b.dataset.reset;
+    S[pre] = {};
+    document.getElementById("form-"+pre).querySelectorAll(".opt").forEach(function(o){ o.setAttribute("aria-pressed","false"); });
+    document.getElementById("form-"+pre).querySelectorAll("input").forEach(function(i){
+      if(i.type === "checkbox") i.checked = false; else i.value = "";
+    });
+    document.getElementById("form-"+pre).querySelectorAll("[data-next],#"+pre+"go").forEach(function(x){ x.disabled = true; });
+    step(pre, 1);
+  });
+});
+
+/* =========================================================
+   ESCENA WEBGL — campo de partículas que muta con el scroll
+   A) silueta de cancha de pádel   B) pines en el mapa
+   C) red de jugadores conectados
+   ========================================================= */
+function scene(){
+  var cv = document.getElementById("scene");
+  if(typeof THREE === "undefined") return;
+
+  var mob = innerWidth < 760;
+  var N = mob ? 2600 : 6400;
+
+  var rnd, sc = new THREE.Scene();
+  var cam = new THREE.PerspectiveCamera(58, innerWidth/innerHeight, .1, 200);
+  cam.position.set(0, 0, 34);
+  try{
+    rnd = new THREE.WebGLRenderer({canvas:cv, antialias:!mob, alpha:false, powerPreference:"high-performance"});
+  }catch(e){ return; }
+  rnd.setPixelRatio(Math.min(devicePixelRatio || 1, mob ? 1.3 : 1.8));
+  rnd.setSize(innerWidth, innerHeight, false);
+  rnd.setClearColor(0x03090A, 1);
+
+  /* --- A: cancha de pádel 20 x 10, con red y líneas de servicio --- */
+  function court(i){
+    var W = 25, H = 12.5, r = Math.random(), x, y;
+    if(r < .46){                            // perímetro
+      var p = Math.random() * 2 * (W + H);
+      if(p < W){ x = -W/2 + p; y = -H/2; }
+      else if(p < W + H){ x = W/2; y = -H/2 + (p - W); }
+      else if(p < 2*W + H){ x = W/2 - (p - W - H); y = H/2; }
+      else { x = -W/2; y = H/2 - (p - 2*W - H); }
+    } else if(r < .66){ x = 0; y = -H/2 + Math.random()*H; }           // red
+    else if(r < .82){ x = (Math.random()<.5?-1:1)*W*.22; y = -H/2 + Math.random()*H; }
+    else { x = -W/2 + Math.random()*W; y = 0; }                        // central
+    return [x, y, (Math.random()-.5)*1.1];
+  }
+
+  /* --- B: pines dispersos, cúmulos tipo ciudades --- */
+  var HUB = [[-7,3.5],[5.5,5],[0,-1],[8,-4.5],[-6,-5],[2.5,2],[-2,6.5]];
+  function pins(i){
+    var h = HUB[i % HUB.length];
+    var a = Math.random() * Math.PI * 2, d = Math.pow(Math.random(), 2.1) * 4.4;
+    return [h[0] + Math.cos(a)*d, h[1] + Math.sin(a)*d*.72, (Math.random()-.5)*3.4];
+  }
+
+  /* --- C: red de jugadores, esfera de nodos --- */
+  function net(i){
+    var u = Math.random(), v = Math.random();
+    var th = 2*Math.PI*u, ph = Math.acos(2*v - 1);
+    var R = 9.6 + (Math.random()-.5)*1.6;
+    return [R*Math.sin(ph)*Math.cos(th), R*Math.sin(ph)*Math.sin(th)*.82, R*Math.cos(ph)*.6];
+  }
+
+  var pA = new Float32Array(N*3), pB = new Float32Array(N*3), pC = new Float32Array(N*3);
+  var seed = new Float32Array(N), size = new Float32Array(N);
+  for(var i=0;i<N;i++){
+    var a = court(i), b = pins(i), c = net(i);
+    pA[i*3]=a[0]; pA[i*3+1]=a[1]; pA[i*3+2]=a[2];
+    pB[i*3]=b[0]; pB[i*3+1]=b[1]; pB[i*3+2]=b[2];
+    pC[i*3]=c[0]; pC[i*3+1]=c[1]; pC[i*3+2]=c[2];
+    seed[i] = Math.random();
+    size[i] = Math.random() < .035 ? 1.7 + Math.random()*0.9 : .42 + Math.random()*0.42;
+  }
+
+  var geo = new THREE.BufferGeometry();
+  geo.setAttribute("position", new THREE.BufferAttribute(pA.slice(), 3));
+  geo.setAttribute("pA", new THREE.BufferAttribute(pA, 3));
+  geo.setAttribute("pB", new THREE.BufferAttribute(pB, 3));
+  geo.setAttribute("pC", new THREE.BufferAttribute(pC, 3));
+  geo.setAttribute("seed", new THREE.BufferAttribute(seed, 1));
+  geo.setAttribute("psize", new THREE.BufferAttribute(size, 1));
+
+  var VERT = [
+    "attribute vec3 pA; attribute vec3 pB; attribute vec3 pC;",
+    "attribute float seed; attribute float psize;",
+    "uniform float uT; uniform float uP; uniform float uDpr;",
+    "varying float vGlow; varying float vSeed;",
+    "void main(){",
+    "  float t = uP * 2.0;",
+    "  vec3 p;",
+    "  if(t < 1.0){ float k = smoothstep(0.0,1.0,t); p = mix(pA,pB,k); }",
+    "  else { float k = smoothstep(0.0,1.0,t-1.0); p = mix(pB,pC,k); }",
+    "  float calm = mix(0.22, 1.0, smoothstep(0.08, 0.55, uP));",
+    "  float w = uT * (0.25 + seed * 0.5);",
+    "  p.x += sin(w + seed*8.0) * 0.40 * calm;",
+    "  p.y += cos(w * 0.8 + seed*12.0) * 0.40 * calm;",
+    "  p.z += sin(w * 0.6 + seed*5.0) * 0.52 * calm;",
+    "  vec4 mv = modelViewMatrix * vec4(p,1.0);",
+    "  gl_Position = projectionMatrix * mv;",
+    "  float d = -mv.z;",
+    "  gl_PointSize = psize * uDpr * (235.0 / max(d, 1.0));",
+    "  vGlow = clamp(1.0 - d / 74.0, 0.0, 1.0);",
+    "  vSeed = seed;",
+    "}"
+  ].join("\n");
+
+  var FRAG = [
+    "precision highp float;",
+    "varying float vGlow; varying float vSeed;",
+    "uniform float uP;",
+    "void main(){",
+    "  vec2 c = gl_PointCoord - 0.5;",
+    "  float r = length(c);",
+    "  if(r > 0.5) discard;",
+    "  float a = pow(1.0 - r * 2.0, 1.9) * vGlow * 0.52;",
+    "  vec3 teal  = vec3(0.090, 0.890, 0.839);",
+    "  vec3 amber = vec3(1.000, 0.690, 0.227);",
+    "  vec3 pale  = vec3(0.760, 1.000, 0.992);",
+    "  vec3 col = mix(teal, pale, smoothstep(0.55, 1.0, vSeed));",
+    "  col = mix(col, amber, step(0.955, vSeed) * (0.55 + 0.45 * uP));",
+    "  gl_FragColor = vec4(col, a * 0.92);",
+    "}"
+  ].join("\n");
+
+  var uni = {
+    uT:{value:0}, uP:{value:0},
+    uDpr:{value:Math.min(devicePixelRatio || 1, mob ? 1.3 : 1.8)}
+  };
+  var mat = new THREE.ShaderMaterial({
+    uniforms:uni, vertexShader:VERT, fragmentShader:FRAG,
+    transparent:true, depthWrite:false, blending:THREE.AdditiveBlending
+  });
+  var pts = new THREE.Points(geo, mat);
+  sc.add(pts);
+
+  /* --- conexiones: hash espacial sobre el estado B (pines) --- */
+  if(!mob){
+    var CELL = 2.4, grid = {}, segs = [], MAXS = 950;
+    for(var k=0;k<N;k+=3){
+      var gx = Math.floor(pB[k*3]/CELL), gy = Math.floor(pB[k*3+1]/CELL);
+      var key = gx + ":" + gy;
+      (grid[key] || (grid[key] = [])).push(k);
+    }
+    Object.keys(grid).forEach(function(key){
+      var cell = grid[key];
+      for(var i=0;i<cell.length && segs.length < MAXS*6;i++){
+        for(var j=i+1;j<Math.min(cell.length, i+4);j++){
+          var A = cell[i], B2 = cell[j];
+          var dx = pB[A*3]-pB[B2*3], dy = pB[A*3+1]-pB[B2*3+1];
+          if(dx*dx + dy*dy < CELL*CELL*.62){
+            segs.push(pB[A*3],pB[A*3+1],pB[A*3+2], pB[B2*3],pB[B2*3+1],pB[B2*3+2]);
+          }
+        }
+      }
+    });
+    if(segs.length){
+      var lg = new THREE.BufferGeometry();
+      lg.setAttribute("position", new THREE.Float32BufferAttribute(segs, 3));
+      var lm = new THREE.LineBasicMaterial({
+        color:0x17E3D6, transparent:true, opacity:0.1, blending:THREE.AdditiveBlending, depthWrite:false
+      });
+      var lines = new THREE.LineSegments(lg, lm);
+      sc.add(lines);
+    }
+  }
+
+  /* --- loop --- */
+  var t0 = performance.now(), prog = 0, target = 0, vis = true;
+  document.addEventListener("visibilitychange", function(){ vis = !document.hidden; });
+  addEventListener("scroll", function(){
+    var max = Math.max(1, document.body.scrollHeight - innerHeight);
+    target = Math.min(1, scrollY / max);
+  }, {passive:true});
+
+  var rz;
+  addEventListener("resize", function(){
+    clearTimeout(rz);
+    rz = setTimeout(function(){
+      cam.aspect = innerWidth/innerHeight; cam.updateProjectionMatrix();
+      rnd.setSize(innerWidth, innerHeight, false);
+    }, 160);
+  });
+
+  (function loop(){
+    requestAnimationFrame(loop);
+    if(!vis) return;
+    prog += (target - prog) * 0.045;
+    uni.uP.value = prog;
+    uni.uT.value = reduce ? 6 : (performance.now() - t0) / 1000;
+    var shift = 7.5 * Math.max(0, 1 - prog * 3.4);
+    pts.position.x = shift;
+    if(typeof lines !== "undefined" && lines) lines.position.x = shift;
+    var a = prog * Math.PI * 0.55;
+    cam.position.x = Math.sin(a) * 9;
+    cam.position.z = 31 - prog * 5;
+    cam.position.y = Math.sin(prog * 3.1) * 3.2;
+    cam.lookAt(0, 0, 0);
+    if(typeof lines !== "undefined" && lines){
+      lines.material.opacity = 0.1 * Math.max(0, 1 - Math.abs(prog - 0.5) * 3.2);
+    }
+    rnd.render(sc, cam);
+  })();
+}
+
+function boot(){
+  var s = document.createElement("script");
+  s.src = "https://cdnjs.cloudflare.com/ajax/libs/three.js/0.128.0/three.min.js";
+  s.onload = scene;
+  document.head.appendChild(s);
+}
+if("requestIdleCallback" in window) requestIdleCallback(boot, {timeout:1600}); else setTimeout(boot, 500);
+})();
+</script>
+</body>
+</html>
