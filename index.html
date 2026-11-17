@@ -530,7 +530,7 @@ footer{background:var(--bg2);border-top:1px solid rgba(23,227,214,.18);padding:5
         <div class="flds">
           <div><label class="fl" for="jn">Nombre</label><input type="text" id="jn" placeholder="Tu nombre" autocomplete="given-name"></div>
           <div><label class="fl" for="jt">WhatsApp</label><input type="tel" id="jt" placeholder="300 000 0000" inputmode="tel" autocomplete="tel"></div>
-          <div class="cns"><input type="checkbox" id="jok"><label for="jok">Autorizo a PÁDEL UP a usar estos datos para contactarme y avisarme de partidos. Puedo pedir que los eliminen cuando quiera.</label></div>
+          <div class="cns"><input type="checkbox" id="jok"><label for="jok">Autorizo a PÁDEL UP a usar estos datos para contactarme y avisarme de partidos, según la <a href="politica-datos.html" target="_blank" rel="noopener" style="color:var(--teal)">política de tratamiento de datos</a>. Puedo pedir que los eliminen cuando quiera.</label></div>
         </div>
         <div class="row"><button type="button" class="gh" data-back="j3">Atrás</button><button type="button" class="btn b1" id="jgo" disabled>Ver mi resumen</button></div>
       </div>
@@ -608,7 +608,7 @@ footer{background:var(--bg2);border-top:1px solid rgba(23,227,214,.18);padding:5
           <div><label class="fl" for="cc">Nombre del club</label><input type="text" id="cc" placeholder="Nombre del club"></div>
           <div><label class="fl" for="cn">Tu nombre</label><input type="text" id="cn" placeholder="Quién nos contesta" autocomplete="given-name"></div>
           <div><label class="fl" for="ct">WhatsApp</label><input type="tel" id="ct" placeholder="300 000 0000" inputmode="tel" autocomplete="tel"></div>
-          <div class="cns"><input type="checkbox" id="cok"><label for="cok">Autorizo a PÁDEL UP a usar estos datos para contactarme sobre el registro de mi club.</label></div>
+          <div class="cns"><input type="checkbox" id="cok"><label for="cok">Autorizo a PÁDEL UP a usar estos datos para contactarme sobre el registro de mi club, según la <a href="politica-datos.html" target="_blank" rel="noopener" style="color:var(--teal)">política de tratamiento de datos</a>.</label></div>
         </div>
         <div class="row"><button type="button" class="gh" data-back="c3">Atrás</button><button type="button" class="btn b1" id="cgo" disabled>Ver mi resumen</button></div>
       </div>
@@ -737,11 +737,12 @@ footer{background:var(--bg2);border-top:1px solid rgba(23,227,214,.18);padding:5
         <a href="#unete">Registrar mi club</a>
         <a href="#unete">Entrar como jugador</a>
         <a href="#unete">Soy fisio o médico deportivo</a>
+        <a href="politica-datos.html">Política de datos</a>
       </div>
     </div>
     <div class="fbot">
       <span class="xs">© 2026 PÁDEL UP · Colombia</span>
-      <span class="xs">Tratamiento de datos conforme a la Ley 1581 de 2012 · [Enlace a la política]</span>
+      <a class="xs" href="politica-datos.html" style="text-decoration:none;border-bottom:1px solid rgba(23,227,214,.4)">Política de tratamiento de datos · Ley 1581 de 2012</a>
     </div>
   </div>
 </footer>
@@ -826,9 +827,7 @@ var jgo = document.getElementById("jgo"), cgo = document.getElementById("cgo");
 gate(["jn","jt"], "jok", jgo);
 gate(["cc","cn","ct"], "cok", cgo);
 
-/* ── CAMBIAR POR EL WHATSAPP DE PÁDEL UP ──
-   Formato: código de país + número, sin + ni espacios. Ej: 573001234567 */
-var WA = "573000000000";
+var WA = "573160550008";
 function wa(msg){ return "https://wa.me/" + WA + "?text=" + encodeURIComponent(msg); }
 
 /* --- jugador --- */
