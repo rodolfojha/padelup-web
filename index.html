@@ -470,7 +470,7 @@ footer{background:var(--bg2);border-top:1px solid rgba(23,227,214,.18);padding:5
   <div class="wrap rv">
     <p class="kick">Únete</p>
     <h2 style="margin-top:18px">Entra en<br>un minuto</h2>
-    <p class="lede" style="margin-top:24px">Contesta cuatro cosas y te armamos el mensaje de WhatsApp listo para enviar. Nada se envía desde esta página.</p>
+    <p class="lede" style="margin-top:24px">Contesta cuatro cosas y te armamos el mensaje de WhatsApp listo para enviar.</p>
 
     <div class="ftab" role="tablist" aria-label="Tipo de registro">
       <button type="button" role="tab" id="tab-j" aria-selected="true" aria-controls="form-j">Soy jugador</button>
@@ -748,6 +748,7 @@ footer{background:var(--bg2);border-top:1px solid rgba(23,227,214,.18);padding:5
   </div>
 </footer>
 
+<script src="config.js"></script>
 <script>
 (function(){
 "use strict";
@@ -828,7 +829,34 @@ var jgo = document.getElementById("jgo"), cgo = document.getElementById("cgo");
 gate(["jn","jt"], "jok", jgo);
 gate(["cc","cn","ct"], "cok", cgo);
 
-var WA = "573160550008";
+var CFG = window.PADELUP_CONFIG || {};
+var WA  = CFG.whatsapp || "573160550008";
+var SB_URL = CFG.supabaseUrl || "";
+var SB_KEY = CFG.supabaseKey || "";
+
+/* Guarda el lead antes de abrir WhatsApp. Si no hay Supabase
+   configurado, o si la red falla, no pasa nada: el usuario sigue
+   su camino y el formulario nunca se bloquea. */
+function guardarLead(datos){
+  if(!SB_URL || !SB_KEY) return;
+  try{
+    datos.politica_version = CFG.politicaVersion || "1.0";
+    datos.origen = location.hostname || "local";
+    datos.user_agent = (navigator.userAgent || "").slice(0, 255);
+    fetch(SB_URL.replace(/\/+$/, "") + "/rest/v1/leads", {
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json",
+        "apikey": SB_KEY,
+        "Authorization":"Bearer " + SB_KEY,
+        "Prefer":"return=minimal"
+      },
+      body: JSON.stringify(datos),
+      keepalive: true
+    }).catch(function(){});
+  }catch(e){}
+}
+
 function wa(msg){ return "https://wa.me/" + WA + "?text=" + encodeURIComponent(msg); }
 
 /* --- jugador --- */
@@ -846,6 +874,11 @@ jgo.addEventListener("click", function(){
   document.getElementById("jrl").textContent = S.j.jnivel;
   document.getElementById("jrh").textContent = S.j.jhora;
   document.getElementById("jgain").textContent = JGAIN[S.j.jnivel] || "";
+  guardarLead({
+    tipo:"jugador", nombre:n, telefono:t,
+    ciudad:S.j.jciudad, nivel:S.j.jnivel, horario:S.j.jhora,
+    autorizacion: document.getElementById("jok").checked
+  });
   document.getElementById("jwa").href = wa(
     "Hola PÁDEL UP, soy " + n + " y quiero entrar como jugador.\n\n"
     + "• Ciudad: " + S.j.jciudad + "\n"
@@ -874,6 +907,11 @@ cgo.addEventListener("click", function(){
   document.getElementById("cro").textContent = S.c.cocup;
   document.getElementById("crp").textContent = S.c.cprio;
   document.getElementById("cgain").textContent = CGAIN[S.c.cprio] || "";
+  guardarLead({
+    tipo:"club", nombre:n, telefono:t, club:club,
+    canchas:S.c.ccanchas, ocupacion:S.c.cocup, prioridad:S.c.cprio,
+    autorizacion: document.getElementById("cok").checked
+  });
   document.getElementById("cwa").href = wa(
     "Hola PÁDEL UP, soy " + n + " de " + club + " y quiero registrar mi club en el mapa.\n\n"
     + "• Canchas: " + S.c.ccanchas + "\n"
